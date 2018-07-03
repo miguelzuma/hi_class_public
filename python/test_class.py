@@ -291,7 +291,7 @@ class TestClass(unittest.TestCase):
             self.cosmo.state,
             "Class failed to go through all __init__ methods")
         if self.cosmo.state:
-            print '--> Class is ready'
+            print('--> Class is ready')
         # Depending
         if 'output' in self.scenario.keys():
             # Positive tests of raw cls
