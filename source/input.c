@@ -1068,6 +1068,14 @@ int input_read_parameters(
 	class_read_list_of_doubles("parameters_smg",pba->parameters_2_smg,pba->parameters_2_size_smg);
       }
 
+      if (strcmp(string1,"no_slip") == 0) {
+	  pba->gravity_model_smg = no_slip;
+	  pba->field_evolution_smg = _FALSE_;
+	  pba->M_pl_evolution_smg = _TRUE_;
+	  flag2=_TRUE_;
+	  pba->parameters_2_size_smg = 5;
+	  class_read_list_of_doubles("parameters_smg",pba->parameters_2_smg,pba->parameters_2_size_smg);
+      }
 
       class_test(flag2==_FALSE_,
 		 errmsg,

@@ -2205,6 +2205,9 @@ int background_initial_conditions(
       case eft_gammas_exponential:
 	pvecback_integration[pba->index_bi_M_pl_smg] = exp(pba->parameters_2_smg[0]*pow(a,pba->parameters_2_smg[4])) + exp(pba->parameters_2_smg[3]*pow(a,pba->parameters_2_smg[7])) -1.;
 	break;
+      case no_slip:
+	pvecback_integration[pba->index_bi_M_pl_smg] = pba->parameters_2_smg[4];
+	break;	
 
     }
     
@@ -2620,7 +2623,22 @@ int background_gravity_functions(
       pvecback[pba->index_bg_M2_smg] = M_pl;
 
     }
-    
+    else if (pba->gravity_model_smg == no_slip) {	
+      
+      double c_k = pba->parameters_2_smg[0];
+      double c_m = pba->parameters_2_smg[1];
+      double a_t = pba->parameters_2_smg[2];
+      double tau = pba->parameters_2_smg[3];
+      double alpha_param;
+
+     alpha_param = 1. - pow(tanh(tau/2. * log(a/a_t)),2.); // tanh parametrization from parametrizing alpha_M
+//      alpha_param = 1./(1. + c_m/(1.+exp(-tau*log(a/a_t)))) * tau * c_m * exp(-tau*log(a/a_t)) / pow(1. + exp(-tau*log(a/a_t)),2.); // From parametrizing M*^2 
+      pvecback[pba->index_bg_mpl_running_smg] = c_m*alpha_param;
+      pvecback[pba->index_bg_kineticity_smg] = c_k*alpha_param; //Try prop to same parametrization. c_k*Omega_smg; // Leave this as prop to Omega for now.
+      pvecback[pba->index_bg_braiding_smg] = -2.*c_m*alpha_param; // Prop to c_m.
+      pvecback[pba->index_bg_tensor_excess_smg] = 0.; // Set this to zero.
+      pvecback[pba->index_bg_M2_smg] = M_pl;
+    }
     
     pvecback[pba->index_bg_H] = sqrt(rho_tot-pba->K/a/a);
     /** - compute derivative of H with respect to conformal time */
@@ -2701,8 +2719,12 @@ int background_gravity_parameters(
      printf("-> Omega_0 = %g, gamma_1 = %g, gamma_2 = %g, gamma_3 = %g, Omega_0_exp = %g, gamma_1_exp = %g, gamma_2_exp = %g, gamma_3_exp = %g \n",
 	    pba->parameters_2_smg[0],pba->parameters_2_smg[1],pba->parameters_2_smg[2],pba->parameters_2_smg[3],pba->parameters_2_smg[4],pba->parameters_2_smg[5],pba->parameters_2_smg[6],pba->parameters_2_smg[7]);
      break;
-
     
+   case no_slip:
+     printf("Modified gravity: no_slip with parameters: \n");
+     printf("-> c_K = %g, c_B = -2*c_M, c_M = %g, c_T = 0, a_t = %g, tau = %g, M_*^2_init = %g \n",
+	    pba->parameters_2_smg[0],pba->parameters_2_smg[1],pba->parameters_2_smg[2],pba->parameters_2_smg[3],pba->parameters_2_smg[4]);
+     break;
   }
   
   if(pba->field_evolution_smg==_FALSE_) {
