@@ -24,6 +24,7 @@ struct lensing {
   //@{
 
   short has_lensed_cls; /**< do we need to compute lensed Cl's at all ? */
+  double A_lens; // Add in A_lens
 
   //@}
 
