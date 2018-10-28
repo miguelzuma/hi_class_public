@@ -2631,10 +2631,13 @@ int background_gravity_functions(
       double tau = pba->parameters_2_smg[3];
       double alpha_param;
 
+     // Add in the two parametrizations of a_M. By default enable the tanh parametrization from the No Slip paper
+     // This is the one used in No Slip CMB
+     // The other version can be uncommented and hi_class recompiled in order to try that parametrization.
      alpha_param = 1. - pow(tanh(tau/2. * log(a/a_t)),2.); // tanh parametrization from parametrizing alpha_M
 //      alpha_param = 1./(1. + c_m/(1.+exp(-tau*log(a/a_t)))) * tau * c_m * exp(-tau*log(a/a_t)) / pow(1. + exp(-tau*log(a/a_t)),2.); // From parametrizing M*^2 
       pvecback[pba->index_bg_mpl_running_smg] = c_m*alpha_param;
-      pvecback[pba->index_bg_kineticity_smg] = c_k*alpha_param; //Try prop to same parametrization. c_k*Omega_smg; // Leave this as prop to Omega for now.
+      pvecback[pba->index_bg_kineticity_smg] = c_k*alpha_param; //Try prop to same parametrization. c_k*Omega_smg;
       pvecback[pba->index_bg_braiding_smg] = -2.*c_m*alpha_param; // Prop to c_m.
       pvecback[pba->index_bg_tensor_excess_smg] = 0.; // Set this to zero.
       pvecback[pba->index_bg_M2_smg] = M_pl;

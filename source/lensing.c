@@ -470,8 +470,6 @@ int lensing_init(
                psp->error_message,
                ple->error_message);
     cl_tt[l] = cl_unlensed[ple->index_lt_tt];
-    // Experimental! Try to add in A_lens, empirical parameter from Planck
-    //double Alens = 1.0;
     // Multiply cl_pp by A_lens
     cl_pp[l] = ple->A_lens*cl_unlensed[ple->index_lt_pp];
     if (ple->has_te==_TRUE_) {
