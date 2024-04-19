@@ -1,6 +1,6 @@
 /** @file perturbations_smg.c Documented perturbations_smg module
  *
- * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, TODO_EB: date here xx.xx.xxxx
+ * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, 2024
  *
  * Additional functions for the perturbation module.
  * It contains all the hi_class related functions (_smg)
@@ -364,14 +364,14 @@ int perturbations_prepare_k_output_smg(
                                        ) {
 
   if (ppt->use_pert_var_deltaphi_smg==_TRUE_) {
-    class_store_columntitle(ppt->scalar_titles, "delta_phi_smg", _TRUE_);
-    class_store_columntitle(ppt->scalar_titles, "delta_phi_prime_smg", _TRUE_);
-    class_store_columntitle(ppt->scalar_titles, "delta_phi_prime_prime_smg", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "delta_phi_smg (sync)", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "delta_phi_prime_smg (sync)", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "delta_phi_prime_prime_smg (sync)", _TRUE_);
   }
   else {
-    class_store_columntitle(ppt->scalar_titles, "V_x_smg", _TRUE_);
-    class_store_columntitle(ppt->scalar_titles, "V_x_prime_smg", _TRUE_);
-    class_store_columntitle(ppt->scalar_titles, "V_x_prime_prime_smg", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "V_x_smg (sync)", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "V_x_prime_smg (sync)", _TRUE_);
+    class_store_columntitle(ppt->scalar_titles, "V_x_prime_prime_smg (sync)", _TRUE_);
   }
 
   /* Quasi-static functions smg*/
@@ -486,30 +486,8 @@ int perturbations_get_h_prime_ic_from_00_smg(
   double p_smg = ppw->pvecback[pba->index_bg_p_smg];
   double kin = ppw->pvecback[pba->index_bg_kineticity_smg];
   double bra = ppw->pvecback[pba->index_bg_braiding_smg];
-  /* TODO_EB: rewrite this equation with new variables */
+  /* NOTE: this could be rewritten this equation with A and B variables */
   ppw->pv->y[ppw->pv->index_pt_h_prime_from_trace] = (-4. * pow(H, -1) * pow(k, 2) * eta / a - 6. * pow(H, -1) * pow(M2, -1) * delta_rho_tot * a + 2. * H * (3. * bra + kin) * ppw->pv->y[ppw->pv->index_pt_x_prime_smg] * a + (2. * bra * pow(k, 2) + (-18. + 15. * bra + 2. * kin) * rho_smg * pow(a, 2) + (-18. * DelM2 + 15. * bra * M2 + 2. * kin * M2) * rho_tot * pow(M2, -1) * pow(a, 2) + (-2. * DelM2 + bra * M2) * 9. * pow(M2, -1) * p_tot * pow(a, 2) + 9. * (-2. + bra) * p_smg * pow(a, 2)) * ppw->pv->y[ppw->pv->index_pt_x_smg]) * pow(-2. + bra, -1);
-
-  return _SUCCESS_;
-}
-
-
-/**
- * Transform synchronous gauge scalar field to newtonian.
- *
- * @param ppw              Input/Output: pointer to perturbation workspace structure
- * @return the error status
- */
-int perturbations_get_x_x_prime_newtonian_smg(
-                                              struct perturbations_workspace * ppw
-                                              ) {
-
-  int qs_array_smg[] = _VALUES_QS_SMG_FLAGS_;
-
-  /* scalar field: TODO_EB: add gauge transformations (when we add Newtonian gauge) */
-  if (qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0) {
-    ppw->pv->y[ppw->pv->index_pt_x_smg] += 0.;
-    ppw->pv->y[ppw->pv->index_pt_x_prime_smg] += 0.;
-  }
 
   return _SUCCESS_;
 }
@@ -2027,7 +2005,7 @@ int perturbations_adiabatic_ic_smg(
 
   a_prime_over_a = ppw->pvecback[pba->index_bg_H]*a;
 
-  H = ppw->pvecback[pba->index_bg_H];//TODO_EB
+  H = ppw->pvecback[pba->index_bg_H];
   Hprime = ppw->pvecback[pba->index_bg_H_prime];
   a = ppw->pvecback[pba->index_bg_a];
   rho_tot = ppw->pvecback[pba->index_bg_rho_tot_wo_smg];
@@ -2068,7 +2046,7 @@ int perturbations_adiabatic_ic_smg(
   DelM2 = ppw->pvecback[pba->index_bg_delta_M2_smg];//M2-1
 
 
-  /* TODO_EB: revisit initial conditions for beyond horndeski and oscillations */
+  /* NOTE: initial conditions are computed for EFT Horndeski. Beyond horndeski and background scalar field oscillations could be added */
 
   if (qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0) {
 
@@ -2412,7 +2390,7 @@ int perturbations_adiabatic_ic_smg(
         shear_ur =  A_sigma_nu_smg/A1_eta_smg* ktau_two * ppr->curvature_ini;
         // /(45.+12.*fracnu) * (3.*s2_squared-1.) * (1.+(4.*fracnu-5.)/4./(2.*fracnu+15.)*tau*om) * ppr->curvature_ini;//TBC /s2_squared; /* shear of ultra-relativistic neutrinos/relics */  //TBC:0
 
-        //TODO: needs to be modified?
+        //TODO: needs to be modified? (ask ILS)
         l3_ur = ktau_three/A1_eta_smg*2./7./(12.*fracnu+45.)* ppr->curvature_ini;//ILS
 
         if(ppt->perturbations_verbose > 8)
@@ -2633,7 +2611,7 @@ int perturbations_isocurvature_cdm_ic_smg(
 
   //only set ICs for smg if have smg, we are in exernal field attractor and we are *not* quasi-static
   if((ppt->pert_initial_conditions_smg==ext_field_attr) && (qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0)) {
-    /* TODO_EB: revisit isocurvature initial conditions for beyond horndeski and oscillations */
+    /* NOTE: initial conditions are computed for EFT Horndeski. Beyond horndeski and background scalar field oscillations could be added */
 
     double coeff_isocurv_smg;
 
@@ -2718,7 +2696,7 @@ int perturbations_isocurvature_b_ic_smg(
 
   //only set ICs for smg if have smg, we are in exernal field attractor and we are *not* quasi-static
   if((ppt->pert_initial_conditions_smg==ext_field_attr)&&(qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0)) {
-    /* TODO_EB: revisit isocurvature initial conditions for beyond horndeski and oscillations */
+    /* NOTE: initial conditions are computed for EFT Horndeski. Beyond horndeski and background scalar field oscillations could be added */
     double coeff_isocurv_smg;
 
     int nexpo= 1;
@@ -2808,7 +2786,7 @@ int perturbations_isocurvature_urd_ic_smg(
   //only set ICs for smg if have smg, we are in exernal field attractor and we are *not* quasi-static
   if((ppt->pert_initial_conditions_smg==ext_field_attr)&&(qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0)) {
 
-    /* TODO_EB: revisit isocurvature initial conditions for beyond horndeski and oscillations */
+    /* NOTE: initial conditions are computed for EFT Horndeski. Beyond horndeski and background scalar field oscillations could be added */
     double coeff_isocurv_smg;
 
     double a = ppw->pvecback[pba->index_bg_a];
@@ -2913,7 +2891,7 @@ int perturbations_isocurvature_urv_ic_smg(
 
   //only set ICs for smg if have smg, we are in exernal field attractor and we are *not* quasi-static
   if((pba->has_smg == _TRUE_)&&(ppt->pert_initial_conditions_smg==ext_field_attr)&&(qs_array_smg[ppw->approx[ppw->index_ap_qs_smg]] == 0)) {
-    /* TODO_EB: revisit isocurvature initial conditions for beyond horndeski and oscillations */
+    /* NOTE: initial conditions are computed for EFT Horndeski. Beyond horndeski and background scalar field oscillations could be added */
 
     double coeff_isocurv_smg;
 

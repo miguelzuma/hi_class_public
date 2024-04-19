@@ -1,6 +1,6 @@
 /** @file background_smg.c Documented background_smg module
  *
- * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, TODO_EB: date here xx.xx.xxxx
+ * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, 2024
  *
  * Additional functions for the background module.
  * It contains all the hi_class related functions (_smg)
@@ -30,7 +30,6 @@
 * and phi is dimensionless (we can think of phi as given in units of the Planck mass
 * - A default module to numerically compute the derivatives when no analytic functions are given should be added.
 * Numerical derivatives may further serve as a consistency check.
-* TODO: Add a background_write_alpha_primes
 *
 * @param pba           Input: pointer to background structure
 * @param a             Input: scale factor
@@ -57,7 +56,6 @@ int background_gravity_functions_smg(
 	pvecback[pba->index_bg_p_tot_wo_smg] = *ptr_p_tot;
 
 	// scalar field + curvature not yet implemented
-	// TODO_EB: look for a better place to put this test
 	class_test(pba->K !=0 ,
 	     pba->error_message,
 	     "has_smg with curvature K = %e not yet implemented",pba->K);
@@ -333,7 +331,7 @@ int background_gravity_functions_smg(
 	*ptr_p_tot += pvecback[pba->index_bg_p_smg];
 	//divide relativistic & nonrelativistic (not very meaningful for oscillatory models)
 
-	//TODO: need to define menaingfully -> separate early universe (IC, BBN...) from late (Halofit...)
+	//TODO: need to define meaningfully -> separate early universe (IC, BBN...) from late (Halofit...)
 	//BUG: causes problem with halofit!, if not, causes bug with Brans-Dicke
 	*ptr_rho_de += pvecback[pba->index_bg_rho_smg];
 
@@ -731,7 +729,7 @@ int background_solve_smg(
 		pba->error_message,
 		pba->error_message);
 
-		// TODO_EB: note that the derivative is now calculated w.r.t. loga, while our _prime are w.r.t. tau
+		// NOTE: note that the derivative is now calculated w.r.t. loga, while our _prime are w.r.t. tau
 		double factor = pvecback[pba->index_bg_a]*pvecback[pba->index_bg_H];
 		double d_over_dtau;
 
@@ -967,7 +965,6 @@ int background_store_columntitles_smg(
     class_store_columntitle(titles,"slip_eff_smg",_TRUE_);
   }
 
-  //TODO: add in output background trigger
   if (pba->output_background_smg >= 3){
     class_store_columntitle(titles,"kineticity_prime_smg",_TRUE_);
     class_store_columntitle(titles,"braiding_prime_smg",_TRUE_);
@@ -1286,7 +1283,7 @@ int derivatives_alphas_smg(
 	/* necessary for calling array_interpolate(), but never used */
 	int last_index;
 
-	// TODO_EB: note that the derivative is now calculated w.r.t. loga, while our _prime are w.r.t. tau
+	// NOTE: note that the derivative is now calculated w.r.t. log(a), while our _prime are w.r.t. tau
 	double factor = pvecback[pba->index_bg_a]*pvecback[pba->index_bg_H];
 	double d_over_dtau;
 

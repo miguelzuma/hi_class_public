@@ -641,7 +641,6 @@ int gravity_models_get_Gs_smg(
   }
 
   else if(pba->gravity_model_smg == galileon){
-    //TODO: change name with ccc_galileon
 
     double M3 = pow(pba->H0,2);
 
@@ -784,14 +783,14 @@ int gravity_models_get_back_par_smg(
 
     //Doran-Robbers model astro-ph/0601544
     //as implemented in Pettorino et al. 1301.5279
-    //TODO: check these expressions, they probably assume the standard evolution/friedmann eqs, etc...
-    //TODO: rewrite the expressions integrating the equation of state
+    //NOTE: rewrite the expressions integrating the equation of state
 
     double Om0 = pba->parameters_smg[0];
     double w0 = pba->parameters_smg[1];
+    // TODO_EB: add a precision parameter for 1e-10
+    //NOTE: I've regularized the expression adding a tiny Omega_e
     double Ome = pba->parameters_smg[2] + 1e-10;
 
-    //NOTE: I've regularized the expression adding a tiny Omega_e
     double Om = ((Om0 - Ome*(1.-pow(a,-3.*w0)))/(Om0 + (1.-Om0)*pow(a,3*w0)) + Ome*(1.-pow(a,-3*w0)));
     double dOm_da = (3*pow(a,-1 - 3*w0)*(-1 + Om0)*(-2*pow(a,3*w0)*(-1 + Om0)*Ome + Om0*Ome + pow(a,6*w0)*(Om0 - 2*Ome + Om0*Ome))*w0)/pow(-(pow(a,3*w0)*(-1 + Om0)) + Om0,2); //from Mathematica
     //I took a_eq = a*rho_r/rho_m, with rho_r = 3*p_tot_wo_smg
@@ -1128,7 +1127,7 @@ int gravity_models_initial_conditions_smg(
 		    double n = pba->parameters_smg[1];
 		    double Rshift0 = pba->parameters_smg[2];
 
-	      double H = sqrt(rho_rad); //TODO: for low n -> need to solve tracker + Constraint simultaneously. Increasing H (e.g. double H = 10*sqrt(rho_rad);) works for n~0.65.
+	      double H = sqrt(rho_rad); //NOTE: for low n -> need to solve tracker + Constraint simultaneously. Increasing H (e.g. double H = 10*sqrt(rho_rad);) works for n~0.65.
 	      double H0 = pba->H0;
 
 	      double signg = copysign(1.,g);
@@ -1187,8 +1186,7 @@ int gravity_models_initial_conditions_smg(
   /* expansion_smg when w is parametrized and rho obtained with integration */
 	if (pba->rho_evolution_smg == _TRUE_){
 
-		//DT: moved here from the definition of wowa_w model, to avoid pvecback[pba->index_bg_rho_smg] mix up
-    // TODO_EB: rethink this
+		//NOTE: moved here from the definition of wowa_w model, to avoid pvecback[pba->index_bg_rho_smg] mix up
 		if (pba->expansion_model_smg == wowa_w) {
 	    double Omega_const_smg = pba->parameters_smg[0];
 	    double w0 = pba->parameters_smg[1];

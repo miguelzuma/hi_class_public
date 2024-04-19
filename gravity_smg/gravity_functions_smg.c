@@ -1,6 +1,6 @@
 /** @file gravity_functions_smg.c Documented gravity_functions_smg module
  *
- * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, TODO_EB: date here xx.xx.xxxx
+ * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, 2024
  *
  * This module contains all the complicated expressions
  * used in hi_class. In particular, they are casted in
@@ -21,7 +21,6 @@
 #include "gravity_functions_smg.h"
 
 
-// TODO_EB: reread all the documentation and check in particular Input/Output
 /**
 * Get gravity functions Es from Gs. These are the functions
 * entering the Friedmann time-time constraint, which is
@@ -56,7 +55,6 @@ int gravity_functions_Es_from_Gs_smg(
   double rho_tot = pvecback[pba->index_bg_rho_tot_wo_smg];
   double p_tot = pvecback[pba->index_bg_p_tot_wo_smg];
 
-  // TODO_EB: decide if it is better to keep it like this or add the pointers to the equations
   double G2=pgf->G2;
   double G2_X=pgf->G2_X, G2_XX=pgf->G2_XX, G2_XXX=pgf->G2_XXX;
   double G2_phi=pgf->G2_phi, G2_Xphi=pgf->G2_Xphi, G2_XXphi=pgf->G2_XXphi;
@@ -658,7 +656,7 @@ int gravity_functions_As_from_alphas_smg(
 	)*pow(H,-2);
 
 
-  // TODO_EB: remove below this when IC are recalculated
+  // NOTE: this could be written in terms of the A's and B's variables.
 
   pvecback[pba->index_bg_lambda_1_smg] = (run + (-1.)*ten)*(-3.)*bra + (1. + ten)*kin;
 
@@ -690,7 +688,8 @@ int gravity_functions_As_from_alphas_smg(
     + (1. + beh)*bra_p/a/H
     + (2. - bra)*beh_p/a/H;
 
-  // TODO_EB: check if there is a better alternative to regularizing these quantities
+  // NOTE: this is to regularize cs2 when both the numerator and denominator are
+  // below numerical precision
 	if (pvecback[pba->index_bg_cs2num_smg] == pvecback[pba->index_bg_kinetic_D_smg]) {
 		pvecback[pba->index_bg_cs2_smg] = 1.;
 	}
@@ -698,7 +697,8 @@ int gravity_functions_As_from_alphas_smg(
 		pvecback[pba->index_bg_cs2_smg] = pvecback[pba->index_bg_cs2num_smg]/pvecback[pba->index_bg_kinetic_D_smg];
 	}
 
-  // TODO_EB: rewrite Geff and slip for beyond Horndeski (calculate them in the hi_class.nb Mathematica notebook)
+  // NOTE: Geff and slip are calculated for Horndeski. Consider extending them to
+  // beyond Horndeski
 	double beta_1 = (run + (-1.)*ten)*2. + (1. + ten)*bra;
 	double beta_2 = 2.*beta_1 + (2. + (-2.)*M2 + bra*M2)*(rho_tot + p_tot)*(-3.)*pow(H,-2)*pow(M2,-1) + ((-2.) + bra)*(rho_smg + p_smg)*(-3.)*pow(H,-2) + 2.*pow(H,-1)*bra_p*pow(a,-1);
 

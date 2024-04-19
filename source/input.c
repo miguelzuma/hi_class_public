@@ -555,7 +555,6 @@ int input_shooting(struct file_content * pfc,
   /* for each target, module up to which we need to run CLASS in order
      to compute the targetted quantities (not running the whole code
      each time to saves a lot of time) */
-  // TODO_EB: here we didn't add any computation stage in the previous version of hi_class, I think we should. Check it
   enum computation_stage target_cs[] = {cs_thermodynamics, /* computation stage for target '100*theta_s' */
                                         cs_thermodynamics, /* computation stage for target 'theta_s_100' */
                                         cs_background,     /* computation stage for target 'Omega_dcdmdr' */

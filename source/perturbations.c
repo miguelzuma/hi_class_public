@@ -6060,14 +6060,6 @@ int perturbations_initial_conditions(struct precision * ppr,
            +ppw->pvecback[pba->index_bg_phi_prime_scf]*alpha_prime);
       }
 
-      if (pba->has_smg == _TRUE_) {
-        class_call(
-          perturbations_get_x_x_prime_newtonian_smg(ppw),
-          ppt->error_message,
-          ppt->error_message
-        );
-      }
-
       if ((pba->has_ur == _TRUE_) || (pba->has_ncdm == _TRUE_) || (pba->has_dr == _TRUE_)  || (pba->has_idr == _TRUE_)) {
 
         delta_ur -= 4.*a_prime_over_a*alpha;

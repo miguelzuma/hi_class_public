@@ -2403,7 +2403,7 @@ int background_initial_conditions(
 
   /* Just checking that our initial time indeed is deep enough in the radiation
      dominated regime (_smg) */
-  // TODO_EB: rethink this test (r+(de?)). There was a class_test_except with free(pvecback);free(pvecback_integration);background_free(pba)
+  // TODO_EB: There was a class_test_except with free(pvecback);free(pvecback_integration);background_free(pba)
   class_test(fabs(pvecback[pba->index_bg_Omega_r]+pvecback[pba->index_bg_Omega_de]-1.) > ppr->tol_initial_Omega_r,
              pba->error_message,
              "Omega_r = %e, Omega_de = %e, not close enough to 1. Decrease a_ini_over_a_today_default in order to start from radiation domination.",

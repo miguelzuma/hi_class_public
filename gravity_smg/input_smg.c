@@ -1,6 +1,6 @@
 /** @file input_smg.c Documented input_smg module
  *
- * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, TODO_EB: date here xx.xx.xxxx
+ * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, 2024
  *
  * Additional functions for the input module.
  * It contains all the hi_class related functions (_smg)
@@ -34,9 +34,6 @@ int input_warnings_smg(
                        struct perturbations * ppt,
                        int input_verbose
                        ) {
-
-  // TODO_EB: rethink this test. The default should have no warnings, and
-  // we have to be sure that get_h_from_trace == _TRUE_ is working properly
 
   /* Here we put a warning as we want to encourage hi_class users to get
   h_prime from the trace of the Einstein ij equation than from the Einstein 00

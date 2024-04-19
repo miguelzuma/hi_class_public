@@ -59,8 +59,6 @@ int perturbations_get_h_prime_ic_from_00_smg(struct background * pba,
                                              double eta,
                                              double delta_rho_tot);
 
-int perturbations_get_x_x_prime_newtonian_smg(struct perturbations_workspace * ppw);
-
 int perturbations_einstein_scalar_smg(struct precision * ppr,
                                       struct background * pba,
                                       struct thermodynamics * pth,

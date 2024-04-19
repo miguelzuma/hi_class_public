@@ -1,6 +1,6 @@
 /** @file fourier_smg.c Documented fourier_smg module
  *
- * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, TODO_EB: date here xx.xx.xxxx
+ * Emilio Bellini, Ignacy Sawicki, Miguel Zumalacarregui, 2024
  *
  * Additional functions for the fourier module.
  * It contains all the hi_class related functions (_smg)
