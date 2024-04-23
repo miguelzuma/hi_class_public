@@ -12,6 +12,7 @@ python/*.pyc
 python/build/i
 ini_files
 .vscode/
+python/classy.cpp
 *.pyc
 python/build/
 *.dSYM
