@@ -43,13 +43,8 @@ int gravity_models_gravity_properties_smg(
   *  -> real models: "parameters_smg" to pba->parameters_smg
   *  -> parameterizations: "parameters_smg" to pba->parameters_2_smg
   *                        "expansion_smg" to pba->parameters_smg
-  * NOTE: can change class_read_list_of_doubles_or_default <-> class_read_list_of_doubles
-  * to make it mandatory or allow for default values
   */
 
-  // TODO_EB: if parameters_smg is not specified it gives segfault. There are two cases:
-  // - gravity_model is not specified either. In this case we redirect to propto_omega. We should have default values also for the parameters
-  // - gravity_model is specified. In this case it should return a documented error rather than segfault.
   if (strcmp(string1,"propto_omega") == 0) {
      pba->gravity_model_smg = propto_omega;
      pba->field_evolution_smg = _FALSE_;
@@ -525,7 +520,7 @@ int gravity_models_expansion_properties_smg(
     flag2=_TRUE_;
     pba->parameters_size_smg = 1;
     pba->rho_evolution_smg=_FALSE_;
-    class_read_list_of_doubles_or_default("expansion_smg",pba->parameters_smg,0.0,pba->parameters_size_smg);
+    class_read_list_of_doubles("expansion_smg",pba->parameters_smg,pba->parameters_size_smg);
   }
   //accept different names
 
@@ -534,7 +529,7 @@ int gravity_models_expansion_properties_smg(
     flag2=_TRUE_;
     pba->parameters_size_smg = 3;
     pba->rho_evolution_smg=_FALSE_;
-    class_read_list_of_doubles_or_default("expansion_smg",pba->parameters_smg,0.0,pba->parameters_size_smg);
+    class_read_list_of_doubles("expansion_smg",pba->parameters_smg,pba->parameters_size_smg);
   }
 
   if (strcmp(string1,"wowa_w") == 0 || strcmp(string1,"w0wa_w") == 0 || strcmp(string1,"cpl_w") == 0 ) {
@@ -542,7 +537,7 @@ int gravity_models_expansion_properties_smg(
     flag2=_TRUE_;
     pba->parameters_size_smg = 3;
     pba->rho_evolution_smg=_TRUE_;
-    class_read_list_of_doubles_or_default("expansion_smg",pba->parameters_smg,0.0,pba->parameters_size_smg);
+    class_read_list_of_doubles("expansion_smg",pba->parameters_smg,pba->parameters_size_smg);
   }
 
   if (strcmp(string1,"wede") == 0) {
@@ -550,7 +545,8 @@ int gravity_models_expansion_properties_smg(
     pba->expansion_model_smg = wede;
     flag2=_TRUE_;
     pba->parameters_size_smg = 3;
-    class_read_list_of_doubles_or_default("expansion_smg",pba->parameters_smg,0.0,pba->parameters_size_smg);
+    class_read_list_of_doubles("expansion_smg",pba->parameters_smg,pba->parameters_size_smg);
+    class_read_double("wede_Omega_e_regularizer_smg",pba->wede_Omega_e_regularizer_smg);
     // 	//optimize the guessing BUG: eventually leads to problem in the MCMC, perhaps the guess is too good?
     // 	if(pba->tuning_index_smg == 0){
     // 	  pba->parameters_smg[0] = pba->Omega0_smg;
@@ -787,9 +783,7 @@ int gravity_models_get_back_par_smg(
 
     double Om0 = pba->parameters_smg[0];
     double w0 = pba->parameters_smg[1];
-    // TODO_EB: add a precision parameter for 1e-10
-    //NOTE: I've regularized the expression adding a tiny Omega_e
-    double Ome = pba->parameters_smg[2] + 1e-10;
+    double Ome = pba->parameters_smg[2] + pba->wede_Omega_e_regularizer_smg;
 
     double Om = ((Om0 - Ome*(1.-pow(a,-3.*w0)))/(Om0 + (1.-Om0)*pow(a,3*w0)) + Ome*(1.-pow(a,-3*w0)));
     double dOm_da = (3*pow(a,-1 - 3*w0)*(-1 + Om0)*(-2*pow(a,3*w0)*(-1 + Om0)*Ome + Om0*Ome + pow(a,6*w0)*(Om0 - 2*Ome + Om0*Ome))*w0)/pow(-(pow(a,3*w0)*(-1 + Om0)) + Om0,2); //from Mathematica

@@ -624,8 +624,7 @@ int background_functions(
 
   /** - compute critical density */
   rho_crit = rho_tot-pba->K/a/a;
-  // TODO_EB: here the condition in hi_class was (rho_crit <= 0.) && (pba->has_smg == _FALSE_). Why?
-  class_test(rho_crit <= 0.,
+  class_test((rho_crit <= 0.) && (pba->initial_conditions_set_smg == _TRUE_),
              pba->error_message,
              "rho_crit = %e instead of strictly positive",rho_crit);
 
@@ -1975,9 +1974,10 @@ int background_solve(
   class_alloc(pvecback_integration,pba->bi_size*sizeof(double),pba->error_message);
 
   /** - impose initial conditions with background_initial_conditions() */
-  class_call(background_initial_conditions(ppr,pba,pvecback,pvecback_integration,&(loga_ini)),
+  class_call_except(background_initial_conditions(ppr,pba,pvecback,pvecback_integration,&(loga_ini)),
              pba->error_message,
-             pba->error_message);
+             pba->error_message,
+             free(pvecback);free(pvecback_integration););
 
   /** - Determine output vector */
   loga_final = 0.; // with our conventions, loga is in fact log(a/a_0); we integrate until today, when log(a/a_0) = 0
@@ -2403,7 +2403,6 @@ int background_initial_conditions(
 
   /* Just checking that our initial time indeed is deep enough in the radiation
      dominated regime (_smg) */
-  // TODO_EB: There was a class_test_except with free(pvecback);free(pvecback_integration);background_free(pba)
   class_test(fabs(pvecback[pba->index_bg_Omega_r]+pvecback[pba->index_bg_Omega_de]-1.) > ppr->tol_initial_Omega_r,
              pba->error_message,
              "Omega_r = %e, Omega_de = %e, not close enough to 1. Decrease a_ini_over_a_today_default in order to start from radiation domination.",

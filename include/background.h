@@ -149,6 +149,7 @@ struct background
 
   double hubble_friction; /** friction coefficient in H' equation: H' = ... + H_friction*(H^2 - rho_crit) [NOT ONLY IN SMG!] */
   int hubble_evolution; /** whether to evolve H' from the equation */
+  double wede_Omega_e_regularizer_smg; /** regularize adding a tiny Omega_e */
 
   enum gravity_model gravity_model_smg; /** Horndeski model */
   //   enum gravity_model_subclass gravity_submodel_smg; /** Horndeski model */

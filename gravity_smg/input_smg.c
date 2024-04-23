@@ -165,16 +165,14 @@ int input_read_parameters_smg(
   class_call(parser_read_string(pfc,"gravity_model",&string1,&flag1,errmsg),
              errmsg,
              errmsg);
+  class_test(flag1 == _FALSE_,
+              errmsg,
+              "gravity_model not read, you should specify one!\n");
 
-  if (flag1 == _FALSE_) {
-    printf(" gravity_model not read, default will be used \n");
-  }
-  else {
-    /** Fix flags for each gravity model */
-     class_call(gravity_models_gravity_properties_smg(pfc, pba, string1, has_tuning_index_smg, has_dxdy_guess_smg, errmsg),
-                errmsg,
-                errmsg);
-  }
+  /** Fix flags for each gravity model */
+    class_call(gravity_models_gravity_properties_smg(pfc, pba, string1, has_tuning_index_smg, has_dxdy_guess_smg, errmsg),
+              errmsg,
+              errmsg);
   // end of loop over models
 
   if(pba->field_evolution_smg == _TRUE_){
@@ -192,8 +190,9 @@ int input_read_parameters_smg(
     class_call(parser_read_string(pfc,"expansion_model",&string1,&flag1,errmsg),
                errmsg,
                errmsg);
-    if (flag1 == _FALSE_)
-      printf("No expansion model specified, will take default one \n");
+    class_test(flag1 == _FALSE_,
+                errmsg,
+                "expansion_model not read, you should specify one!\n");
 
     /** Fix flags for each expansion model */
     class_call(gravity_models_expansion_properties_smg(pfc, pba, string1, errmsg),
@@ -337,6 +336,7 @@ int input_default_params_smg(
   pba->hubble_evolution = _TRUE_; /** dynamical evolution of Friedmann eq. */
   pba->hubble_friction = 3.; /** friction coefficient in H' equation: H' = ... + H_friction*(H^2 - rho_crit) [NOT ONLY IN SMG!] */
   pba->rho_evolution_smg = _FALSE_; /*does the model require to evolve the background energy density? (only for parameterizations)*/
+  pba->wede_Omega_e_regularizer_smg = 1.e-10; /** regularize adding a tiny Omega_e */
 
   pba->kineticity_safe_smg = 0; /* value added to the kineticity, useful to cure perturbations at early time in some models */
   pba->cs2_safe_smg = 0; /* threshold to consider the sound speed of scalars negative in the stability check */
